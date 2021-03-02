@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  adminer:
+    image: adminer
+    container_name: adminer_wp
+    ports:
+      - 8080:8080
+    networks:
+      - wpnet
+
+  db_wp:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: carmelo
+      MYSQL_PASSWORD: enkipass
+      MYSQL_ROOT_PASSWORD: rootpass
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - wpnet
+
+
+
+
+  wp:
+    #build: ./app
+    image: wordpress:5.6.2-apache
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: db_wp
+      WORDPRESS_DB_USER: carmelo
+      WORDPRESS_DB_PASSWORD: enkipass
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - db_wp
+    volumes:
+      - wordpress:/var/www/html
+    networks:
+      - wpnet
+
+
+networks:
+  wpnet:
+
+volumes:
+  wordpress:
+  db:
