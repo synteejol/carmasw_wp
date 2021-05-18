@@ -39,7 +39,7 @@ services:
     depends_on:
       - db_wp
     volumes:
-      - wordpress:/var/www/html
+      - ./wordpress/:/var/www/html/
     networks:
       - wpnet
 
